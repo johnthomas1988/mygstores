@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store Locator</title>
+    <title>myG Store Locator</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
     <style>
         body {
@@ -11,10 +11,8 @@
             margin: 0;
             padding: 20px;
         }
-        .banner {
-            width: 100%;
-            height: auto;
-            margin-bottom: 20px;
+        h1 {
+            text-align: center;
         }
         .filters, .branch-container {
             margin-top: 20px;
@@ -75,14 +73,17 @@
         .search-container {
             margin: 20px 0;
         }
+        .reset-button {
+            background-color: #f44336; /* Red */
+        }
+        .reset-button:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 <body>
 
-<!-- Add your banner image here -->
-<img src="https://raw.githubusercontent.com/johnthomas1988/mygstores/refs/heads/main/myG%20Store%20Locator.jpg" alt="Top Banner" class="banner" />
-
-<h1>Store Locator</h1>
+<h1>myG Store Locator</h1>
 
 <div class="search-container">
     <input type="text" id="pincodeInput" placeholder="Enter Pincode" />
@@ -94,6 +95,7 @@
         <option value="50">50 km</option>
     </select>
     <button onclick="findNearestStore()">Find Nearest Store</button>
+    <button class="reset-button" onclick="resetFilters()">Reset Filters</button>
 </div>
 
 <div class="filters">
@@ -237,6 +239,18 @@
     function calculateDistance(storePincode, userPincode) {
         // Replace this with actual distance calculation
         return Math.abs(parseInt(storePincode) - parseInt(userPincode)) <= 20 ? 20 : 0;
+    }
+
+    // Reset filters and search
+    function resetFilters() {
+        $('#pincodeInput').val('');
+        $('#distance').val('20');
+        $('#district').val('');
+        $('#storeCategory').val('');
+        $('#rbm').val('');
+        $('#bdm').val('');
+        $('#searchInput').val('');
+        displayBranches(branchData);
     }
 </script>
 
