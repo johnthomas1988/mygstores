@@ -63,6 +63,7 @@
             margin: 20px 0;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
         .reset-button {
             position: absolute;
@@ -86,6 +87,16 @@
         button:hover {
             background-color: #45a049;
         }
+        .short-input {
+            width: 120px; /* Adjust width for Pincode input */
+        }
+        .filter-col {
+            flex: 1;
+        }
+        .distance-selector {
+            flex: 1;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -94,10 +105,8 @@
 <button class="reset-button" onclick="resetFilters()">Reset Filters</button>
 
 <div class="search-container">
-    <div style="flex: 1; margin-right: 10px;">
-        <input type="text" id="pincodeInput" placeholder="Enter Pincode" />
-    </div>
-    <div style="flex: 1; margin-right: 10px;">
+    <input type="text" class="short-input" id="pincodeInput" placeholder="Pincode" />
+    <div class="distance-selector">
         <label for="distance">Choose Distance:</label>
         <select id="distance">
             <option value="20">20 km</option>
@@ -253,8 +262,8 @@
 
     // Dummy function to calculate distance based on pincodes (needs real implementation)
     function calculateDistance(storePincode, userPincode) {
-        // Replace this with actual distance calculation
-        return Math.abs(parseInt(storePincode) - parseInt(userPincode)) <= 20 ? 20 : 0; 
+        // Replace this with actual distance calculation logic
+        return 10; // Dummy value for demonstration
     }
 
     // Reset all filters
