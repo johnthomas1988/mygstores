@@ -59,6 +59,11 @@
         .filter-col:last-child {
             margin-right: 0;
         }
+        .search-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+        }
         button {
             padding: 10px 15px;
             background-color: #4CAF50;
@@ -69,9 +74,6 @@
         }
         button:hover {
             background-color: #45a049;
-        }
-        .search-container {
-            margin: 20px 0;
         }
         .reset-button {
             background-color: #f44336; /* Red */
@@ -86,14 +88,18 @@
 <h1>myG Store Locator</h1>
 
 <div class="search-container">
-    <input type="text" id="pincodeInput" placeholder="Enter Pincode" />
-    <label for="distance">Choose Distance:</label>
-    <select id="distance">
-        <option value="20">20 km</option>
-        <option value="30">30 km</option>
-        <option value="40">40 km</option>
-        <option value="50">50 km</option>
-    </select>
+    <div style="flex: 1; margin-right: 10px;">
+        <input type="text" id="pincodeInput" placeholder="Enter Pincode" />
+    </div>
+    <div style="flex: 1; margin-right: 10px;">
+        <label for="distance">Choose Distance:</label>
+        <select id="distance">
+            <option value="20">20 km</option>
+            <option value="30">30 km</option>
+            <option value="40">40 km</option>
+            <option value="50">50 km</option>
+        </select>
+    </div>
     <button onclick="findNearestStore()">Find Nearest Store</button>
     <button class="reset-button" onclick="resetFilters()">Reset Filters</button>
 </div>
@@ -131,7 +137,7 @@
     </div>
 </div>
 
-<input type="text" id="searchInput" placeholder="Search Branches..." onkeyup="searchBranches()" />
+<input type="text" id="searchInput" placeholder="Advanced Search..." onkeyup="searchBranches()" />
 
 <div class="branch-container" id="branchContainer"></div>
 
@@ -213,11 +219,16 @@
         return address.replace(/\b\w/g, char => char.toUpperCase());
     }
 
-    // Search branches based on user input
+    // Search branches based on user input across all fields
     function searchBranches() {
         const searchValue = $('#searchInput').val().toLowerCase();
         const filteredBranches = branchData.filter(branch => 
-            branch.BranchName.toLowerCase().includes(searchValue)
+            branch.BranchName.toLowerCase().includes(searchValue) ||
+            branch.Address.toLowerCase().includes(searchValue) ||
+            branch.RBM.toLowerCase().includes(searchValue) ||
+            branch.BDM.toLowerCase().includes(searchValue) ||
+            branch.StoreNumber.toString().includes(searchValue) ||
+            branch.Email.toLowerCase().includes(searchValue)
         );
         displayBranches(filteredBranches);
     }
@@ -250,9 +261,8 @@
         $('#rbm').val('');
         $('#bdm').val('');
         $('#searchInput').val('');
-        displayBranches(branchData);
+        displayBranches(branchData); // Show all branches again
     }
 </script>
-
 </body>
 </html>
