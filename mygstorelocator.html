@@ -3,22 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Branch Master</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Store Locator</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
         }
-        .branch-container {
+        .banner {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .filters, .branch-container {
             margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f9f9f9;
         }
         .branch {
             border: 1px solid #ccc;
             padding: 15px;
             margin-bottom: 15px;
             background-color: #fff;
+            display: flex;
+            flex-direction: column;
         }
         .branch h3 {
             margin: 0;
@@ -31,50 +41,52 @@
         .branch span {
             font-weight: bold;
         }
-        .filters, .search-container {
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .filter-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            width: 150px;
+        .filter-col {
+            flex: 1;
+            margin-right: 10px;
         }
-        .filter-group label {
-            margin-bottom: 5px;
-            color: #444;
+        .filter-col:last-child {
+            margin-right: 0;
         }
-        .search-container {
-            margin-bottom: 10px;
-        }
-        .reset-button {
-            background-color: #ff4c4c;
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 10px;
+            border-radius: 4px;
             cursor: pointer;
-            margin-bottom: 20px;
-            border-radius: 5px;
         }
-        .reset-button:hover {
-            background-color: #ff1a1a;
+        button:hover {
+            background-color: #45a049;
         }
-        #search {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .search-container {
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
 
+<!-- Add your banner image here -->
+<img src="https://raw.githubusercontent.com/johnthomas1988/mygstores/refs/heads/main/myG%20Store%20Locator.jpg" alt="Top Banner" class="banner" />
+
+<h1>Store Locator</h1>
+
 <div class="search-container">
-    <label for="pincode">Enter Pincode:</label>
-    <input type="text" id="pincode" placeholder="Pincode">
-    <label for="distance">Select Distance (in km):</label>
+    <input type="text" id="pincodeInput" placeholder="Enter Pincode" />
+    <label for="distance">Choose Distance:</label>
     <select id="distance">
         <option value="20">20 km</option>
         <option value="30">30 km</option>
@@ -85,27 +97,39 @@
 </div>
 
 <div class="filters">
-    <div class="filter-group">
-        <label for="district">District</label>
-        <select id="district" onchange="filterBranches()"></select>
+    <div class="filter-row">
+        <div class="filter-col">
+            <label for="district">District:</label>
+            <select id="district" onchange="filterBranches()">
+                <option value="">Select District</option>
+            </select>
+        </div>
+        <div class="filter-col">
+            <label for="storeCategory">Store Category:</label>
+            <select id="storeCategory" onchange="filterBranches()">
+                <option value="">Select Store Category</option>
+                <option value="myG Store">myG Store</option>
+                <option value="Future Store">Future Store</option>
+            </select>
+        </div>
     </div>
-    <div class="filter-group">
-        <label for="storeCategory">Store Category</label>
-        <select id="storeCategory" onchange="filterBranches()"></select>
-    </div>
-    <div class="filter-group">
-        <label for="rbm">RBM</label>
-        <select id="rbm" onchange="filterBranches()"></select>
-    </div>
-    <div class="filter-group">
-        <label for="bdm">BDM</label>
-        <select id="bdm" onchange="filterBranches()"></select>
+    <div class="filter-row">
+        <div class="filter-col">
+            <label for="rbm">RBM:</label>
+            <select id="rbm" onchange="filterBranches()">
+                <option value="">Select RBM</option>
+            </select>
+        </div>
+        <div class="filter-col">
+            <label for="bdm">BDM:</label>
+            <select id="bdm" onchange="filterBranches()">
+                <option value="">Select BDM</option>
+            </select>
+        </div>
     </div>
 </div>
 
-<input type="text" id="search" placeholder="Search by Branch Name..." oninput="searchBranches()">
-
-<button class="reset-button" onclick="resetFilters()">Reset Filters</button>
+<input type="text" id="searchInput" placeholder="Search Branches..." onkeyup="searchBranches()" />
 
 <div class="branch-container" id="branchContainer"></div>
 
@@ -114,29 +138,32 @@
     let branchData = [];
 
     // Load the branch data from GitHub
-    $.getJSON("https://raw.githubusercontent.com/johnthomas1988/mygstores/refs/heads/main/BranchMaster10-10-24.json", function(data) {
+    $.getJSON('https://raw.githubusercontent.com/johnthomas1988/mygstores/refs/heads/main/BranchMaster10-10-24.json', function(data) {
         branchData = data;
-        populateFilters(data);
-        displayBranches(data);
+        populateDistricts(data);
+        populateRBM(data);
+        populateBDM(data);
+        populateBranches(data);
     });
 
-    // Populate filters with unique values
-    function populateFilters(data) {
+    // Populate districts in the dropdown
+    function populateDistricts(data) {
         const districts = [...new Set(data.map(item => item.District))];
         districts.forEach(district => {
             $('#district').append(new Option(district, district));
         });
+    }
 
-        const storeCategories = [...new Set(data.map(item => item.StoreCategory))];
-        storeCategories.forEach(category => {
-            $('#storeCategory').append(new Option(category, category));
-        });
-
+    // Populate RBMs in the dropdown
+    function populateRBM(data) {
         const rbms = [...new Set(data.map(item => item.RBM))];
         rbms.forEach(rbm => {
             $('#rbm').append(new Option(rbm, rbm));
         });
+    }
 
+    // Populate BDMs in the dropdown
+    function populateBDM(data) {
         const bdms = [...new Set(data.map(item => item.BDM))];
         bdms.forEach(bdm => {
             $('#bdm').append(new Option(bdm, bdm));
@@ -146,85 +173,70 @@
     // Filter branches based on selected criteria
     function filterBranches() {
         const selectedDistrict = $('#district').val();
-        const selectedCategory = $('#storeCategory').val();
-        const selectedRbm = $('#rbm').val();
-        const selectedBdm = $('#bdm').val();
+        const selectedStoreCategory = $('#storeCategory').val();
+        const selectedRBM = $('#rbm').val();
+        const selectedBDM = $('#bdm').val();
 
         const filteredBranches = branchData.filter(branch => {
             return (
-                (selectedDistrict === "" || branch.District === selectedDistrict) &&
-                (selectedCategory === "" || branch.StoreCategory === selectedCategory) &&
-                (selectedRbm === "" || branch.RBM === selectedRbm) &&
-                (selectedBdm === "" || branch.BDM === selectedBdm)
+                (!selectedDistrict || branch.District === selectedDistrict) &&
+                (!selectedStoreCategory || branch.StoreCategory === selectedStoreCategory) &&
+                (!selectedRBM || branch.RBM === selectedRBM) &&
+                (!selectedBDM || branch.BDM === selectedBDM)
             );
         });
 
         displayBranches(filteredBranches);
     }
 
-    // Display branches in a structured format
+    // Display branches in the container
     function displayBranches(branches) {
         $('#branchContainer').empty();
         branches.forEach(branch => {
-            const branchDiv = `
+            $('#branchContainer').append(`
                 <div class="branch">
                     <h3>${branch.BranchName} (${branch.BranchCode})</h3>
                     <p><span>RBM:</span> ${branch.RBM}</p>
                     <p><span>BDM:</span> ${branch.BDM}</p>
-                    <p><span>Address:</span> ${capitalizeAddress(branch.Address)}</p>
-                    <p><span>Pincode:</span> ${branch.Pincode}</p>
+                    <p><span>Address:</span> ${capitalizeAddress(branch.Address)}, Pincode: ${branch.Pincode}</p>
+                    <p><span>Store Number:</span> ${branch.StoreNumber}</p>
+                    <p><span>Email:</span> ${branch.Email}</p>
                 </div>
-            `;
-            $('#branchContainer').append(branchDiv);
+            `);
         });
     }
 
-    // Capitalize address for better readability
+    // Capitalize each word in the address
     function capitalizeAddress(address) {
-        return address.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        return address.replace(/\b\w/g, char => char.toUpperCase());
     }
 
-    // Search branches based on input
+    // Search branches based on user input
     function searchBranches() {
-        const query = $('#search').val().toLowerCase();
+        const searchValue = $('#searchInput').val().toLowerCase();
         const filteredBranches = branchData.filter(branch => 
-            branch.BranchName.toLowerCase().includes(query)
+            branch.BranchName.toLowerCase().includes(searchValue)
         );
         displayBranches(filteredBranches);
     }
 
-    // Find nearest stores based on pincode and distance
+    // Find nearest store based on pincode and distance
     function findNearestStore() {
-        const pincodeInput = $('#pincode').val();
-        const distanceInput = $('#distance').val();
+        const pincode = $('#pincodeInput').val();
+        const maxDistance = parseInt($('#distance').val());
 
-        if (!pincodeInput || !distanceInput) {
-            alert("Please enter both pincode and distance.");
-            return;
-        }
-
-        const userPincode = parseInt(pincodeInput);
-        const maxDistance = parseInt(distanceInput);
-
-        // Simplified distance check based on pincode
+        // For simplicity, we'll just display branches within the same pincode for now
         const nearestBranches = branchData.filter(branch => {
-            const branchPincode = parseInt(branch.Pincode);
-            return Math.abs(branchPincode - userPincode) <= maxDistance;
+            return branch.Pincode.startsWith(pincode) && calculateDistance(branch.Pincode, pincode) <= maxDistance;
         });
 
         displayBranches(nearestBranches);
     }
 
-    // Reset all filters and search
-    function resetFilters() {
-        $('#district').val('');
-        $('#storeCategory').val('');
-        $('#rbm').val('');
-        $('#bdm').val('');
-        $('#search').val('');
-        $('#pincode').val('');
-        $('#distance').val('20');
-        displayBranches(branchData);
+    // Dummy function to calculate distance based on pincodes (needs real implementation)
+    function calculateDistance(storePincode, userPincode) {
+        // Replace this with actual distance calculation
+        return Math.abs(parseInt(storePincode) - parseInt(userPincode)) <= 20 ? 20 : 0;
     }
 </script>
 
