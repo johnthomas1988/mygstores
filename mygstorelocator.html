@@ -88,7 +88,7 @@
             background-color: #45a049;
         }
         .short-input {
-            width: 120px; /* Adjust width for Pincode input */
+            width: 100px; /* Adjusted width for Pincode input */
         }
         .filter-col {
             flex: 1;
@@ -252,18 +252,11 @@
         const pincode = $('#pincodeInput').val();
         const maxDistance = parseInt($('#distance').val());
 
-        // For simplicity, we'll just display branches within the same pincode for now
         const nearestBranches = branchData.filter(branch => {
-            return branch.Pincode.startsWith(pincode) && calculateDistance(branch.Pincode, pincode) <= maxDistance;
+            return branch.Pincode.startsWith(pincode);
         });
 
         displayBranches(nearestBranches);
-    }
-
-    // Dummy function to calculate distance based on pincodes (needs real implementation)
-    function calculateDistance(storePincode, userPincode) {
-        // Replace this with actual distance calculation logic
-        return 10; // Dummy value for demonstration
     }
 
     // Reset all filters
