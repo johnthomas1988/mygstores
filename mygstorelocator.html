@@ -64,6 +64,17 @@
             display: flex;
             justify-content: space-between;
         }
+        .reset-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #f44336; /* Red */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px 15px;
+        }
         button {
             padding: 10px 15px;
             background-color: #4CAF50;
@@ -75,17 +86,12 @@
         button:hover {
             background-color: #45a049;
         }
-        .reset-button {
-            background-color: #f44336; /* Red */
-        }
-        .reset-button:hover {
-            background-color: #d32f2f;
-        }
     </style>
 </head>
 <body>
 
 <h1>myG Store Locator</h1>
+<button class="reset-button" onclick="resetFilters()">Reset Filters</button>
 
 <div class="search-container">
     <div style="flex: 1; margin-right: 10px;">
@@ -101,7 +107,6 @@
         </select>
     </div>
     <button onclick="findNearestStore()">Find Nearest Store</button>
-    <button class="reset-button" onclick="resetFilters()">Reset Filters</button>
 </div>
 
 <div class="filters">
@@ -249,18 +254,18 @@
     // Dummy function to calculate distance based on pincodes (needs real implementation)
     function calculateDistance(storePincode, userPincode) {
         // Replace this with actual distance calculation
-        return Math.abs(parseInt(storePincode) - parseInt(userPincode)) <= 20 ? 20 : 0;
+        return Math.abs(parseInt(storePincode) - parseInt(userPincode)) <= 20 ? 20 : 0; 
     }
 
-    // Reset filters and search
+    // Reset all filters
     function resetFilters() {
-        $('#pincodeInput').val('');
-        $('#distance').val('20');
         $('#district').val('');
         $('#storeCategory').val('');
         $('#rbm').val('');
         $('#bdm').val('');
         $('#searchInput').val('');
+        $('#pincodeInput').val('');
+        $('#distance').val('20'); // Reset distance to default
         displayBranches(branchData); // Show all branches again
     }
 </script>
